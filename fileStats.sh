@@ -4,45 +4,42 @@ statistic() {
     local source="$1"
     local stat_file="$2"
 
-    # CZY PLIK ZRODLOWY ISTNIEJE/SA UPRAWNIENIIA
+    # CHECK IF THE SOURCE FILE EXISTS AND HAS READ PERMISSIONS
     if [ ! -e "$source" ] || [ ! -r "$source" ]; then
-        echo "Blad: Brak pliku zródlowego lub brak uprawnien do odczytu."
+        echo "Error: Source file does not exist or does not have permissions."
         exit 1
     fi
 
-    # CZY PLIK ZE STATYSTYKAMI ISTNIEJE
+    # CHECK IF THE STATISTICS FILE EXISTS
     if [ ! -e "$stat_file" ]; then
         touch "$stat_file"
     fi
 
-    # CZY SA UPRAWNIENIIA DO ZAPISU DO PLIKU ZE STATYSTYKAMI
+    # CHECK IF THERE ARE WRITE PERMISSIONS FOR THE STATISTICS FILE
     if [ ! -w "$stat_file" ]; then
-        echo "Blad: Brak uprawnien do zapisu w pliku wyjsciowym."
+        echo "Error: No write permissions for the output file."
         exit 1
     fi
 
     declare -A word_count
 
-    
-    tr -d '[:punct:]' < "$source" | while IFS=' ' read -r -a words; do	#USUNIECIE ZANKOW INTERPUNKCYJNYCH
-        for word in "${words[@]}"; do		#ITERACJA PO WSZYSTKICH SLOWACH
-            if [[ -n "$word" ]]; then  		# CZY ZMIENNA NIE JEST PUSTA
-                ((word_count["$word"]++))	# LICZBA WYSTAPIEN KONKRETNYCH SLOW
+    # REMOVE PUNCTUATION AND READ WORDS
+    tr -d '[:punct:]' < "$source" | while IFS=' ' read -r -a words; do
+        for word in "${words[@]}"; do   # ITERATE THROUGH ALL WORDS
+            if [[ -n "$word" ]]; then   # CHECK IF VARIABLE IS NOT EMPTY
+                ((word_count["$word"]++))  # COUNT WORD OCCURRENCES
             fi
         done
     done
 
-    # SORTOWANIE I ZAPIS
+    # SORT AND SAVE TO FILE
     for word in "${!word_count[@]}"; do
         echo "$word ${word_count[$word]}"
-    done | sort -k2,2nr > "$stat_file"		# k2 - SORTOWANIE WG DRUGIEJ KOLUMNY, 2NR - SORTOWANIE NUMERYCZNE MALEJACE
+    done | sort -k2,2nr > "$stat_file"  # k2 - SORT BY SECOND COLUMN, 2NR - NUMERIC DESCENDING SORT
 
-    echo "Finished. Statystyki zapisane"
+    echo "Finished. Statistics saved."
 }
 
-echo "Podaj plik do analizy oraz plik docelowy z wynikiem (po spacji): "
+echo "Enter the file to analyze and the output file (space-separated): "
 read src_file dest_file
 statistic "$src_file" "$dest_file"
-
-
-
