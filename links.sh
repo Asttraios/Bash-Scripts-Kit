@@ -1,0 +1,40 @@
+#!/bin/bash
+
+directory="$1" 
+
+mkdir -p $directory		# CREATING directory
+
+cd $directory			#CD TO NEW directory
+
+mkdir -p D1 D2 D3 D4	# CREATING DIRECTIORIES
+
+touch D2/F1.txt D3/F1.txt D4/F1.txt		# CREATING FILES
+
+ln -s /etc/passwd D1/passwd_dow			# CREATING SYMLINK TO PASSWD - OPENING PASSWD_DOW RESULTS IN OPENING /ETC/PASSWD
+
+readlink -f D1/passwd_dow		# DIRECTORY OF SYMLINKED FILE - /ETC/PASSWD 
+
+ln D3/F1.txt D2/F2.txt		# HARDLINK TO F1.TXT - SAME INODE - REFERS TO F2.TXT
+
+chmod 711 D2/F2.txt		# 7 - OWNER - R,W,X	1 - GROUP - X, 1 - OTHER USERS - X
+
+chown :users D2/F2.txt	# CHANGING FILE'S TO GROUP USERS
+
+chgrp users D3/		# CHANGING GROUP TO USERS		
+
+chmod 222 D3/		# 2-OWNRER-W, 2-GROUP-W, 2-OTHER USERS-W
+
+chmod 555 D2/		# 5-OWNER-RX, 5-GROUP-RX, 5-OTHER USERS-RX
+
+chmod 333  D4/		# 3-OWNER-WX, 3-GROUP-WX, 3-OTHER USERS-WX
+
+chmod +t D4/		# STICKY BIT - ONLY FILE/DIRECTORY OWNER/ROOT CAN DELETE D4 DIRECTORY
+
+touch D1/scr1.sh	#CREATE BASH FILE
+
+chmod 110 D1/scr1.sh	# 1-OWNER-X, 1-GROUP-1X, 0-OTHER USERS-NO PRIVILEGES
+
+chmod u+s,g+s D1/scr1.sh	# FILE CAN BE EXECUTED WITH OWNER PRIVILEGES AND OWNER'S GROUP PRIVILEGES	
+
+
+
