@@ -6,7 +6,7 @@ mkdir -p $directory		# CREATING directory
 
 cd $directory			#CD TO NEW directory
 
-mkdir -p D1 D2 D3 D4	# CREATING DIRECTIORIES
+mkdir -p D1 D2 D3 D4	# CREATING SUBDIRECTIORIES
 
 touch D2/F1.txt D3/F1.txt D4/F1.txt		# CREATING FILES
 
